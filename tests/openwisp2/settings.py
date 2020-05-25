@@ -10,12 +10,17 @@ ALLOWED_HOSTS = []
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.spatialite',
-        'NAME': 'openwisp-controller.db',
-    }
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': 'openwisp2',
+        'USER': 'postgres',
+        'PASSWORD': '',
+        'HOST': '',
+        'PORT': ''
+    },
 }
 
-SPATIALITE_LIBRARY_PATH = 'mod_spatialite.so'
+
+#SPATIALITE_LIBRARY_PATH = 'mod_spatialite.so'
 
 SECRET_KEY = 'fn)t*+$)ugeyip6-#txyy$5wf2ervc0d2n#h)qb)y5@ly$t*@w'
 
@@ -94,9 +99,13 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = '{0}/media/'.format(os.path.dirname(BASE_DIR))
 
+
+SETTINGS_PATH = os.path.dirname(os.path.dirname(__file__))
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+       
         'OPTIONS': {
             'loaders': [
                 'django.template.loaders.filesystem.Loader',
@@ -108,10 +117,26 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'openwisp_utils.admin_theme.context_processor.menu_items'
+                'openwisp_utils.admin_theme.context_processor.menu_items',
+                'openwisp_utils.admin_theme.context_processor.admin_theme_settings'
             ],
         },
     }
+]
+
+OPENWISP_ADMIN_INDEX_TITLE = 'Remote Management System'
+OPENWISP_ADMIN_SITE_TITLE = 'Roltek RMS'
+OPENWISP_ADMIN_SITE_HEADER = 'Roltek RMS'
+
+
+OPENWISP_ADMIN_THEME_LINKS = [
+    {'type': 'text/css', 'href': '/static/custom-theme.css', 'rel': 'stylesheet', 'media': 'all'}, 
+    {'type': 'image/x-icon', 'href': '/static/favicon.png', 'rel': 'icon'}
+]
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+    '/Users/bugrademiriz/Desktop/RMS/openwisp-controller/openwisp_controller/assets',
 ]
 
 FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
@@ -154,6 +179,13 @@ LOGGING = {
     # }
 }
 
+DEBUG_TOOLBAR_CONFIG = {
+    # Toolbar options
+    'RESULTS_CACHE_SIZE': 3,
+    'SHOW_COLLAPSED': True,
+    # Panel options
+    'SQL_WARNING_THRESHOLD': 100,   # milliseconds
+}
 # local settings must be imported before test runner otherwise they'll be ignored
 try:
     from .local_settings import *
